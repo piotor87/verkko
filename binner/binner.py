@@ -28,7 +28,7 @@ Example of the coroutine interface:
    binned_data = bin_counter.next()
 """
 
-
+from __future__ import print_function
 from math import ceil, floor, sqrt
 from operator import itemgetter
 import numpy as np
@@ -727,7 +727,7 @@ class Bins(object):
                 try:
                     binCounts[curr_bin] += 1
                 except IndexError:
-                    print "IndexError in bin_count."
+                    print ("IndexError in bin_count.")
                     print ("   Value    %g" % (elem,))
                     print ("   Interval [%g, %g]" % (self.bin_limits.minValue,
                                                      self.bin_limits.maxValue))
@@ -740,7 +740,10 @@ class Bins(object):
         # first yield-statement so that the user may start calling
         # send(data), and return the generator iterator.
         bingen = bin_count_gen()
-        bingen.next()
+        try:
+            bingen.next()
+        except:
+            next(bingen)
         if coords is None:
             return bingen
         else:
@@ -777,7 +780,10 @@ class Bins(object):
                 elem = (yield bc_gen.send(elem) / self.widths)
 
         bcd_gen = bin_count_divide_gen()
-        bcd_gen.next()
+        try:
+            bcd_gen.next()
+        except:
+            next(bcd_gen)
         if coords is None:
             return bcd_gen
         else:
@@ -838,7 +844,10 @@ class Bins(object):
                                         " with length at least 2.")
 
         bs_gen = bin_sum_gen()
-        bs_gen.next()
+        try:
+            bs_gen.next()
+        except:
+            next(bs_gen)
         if data is None:
             return bs_gen
         else:
@@ -878,7 +887,10 @@ class Bins(object):
                 elem = (yield bs_gen.send(elem) / self.widths)
 
         bsd_gen = bin_sum_divide_gen()
-        bsd_gen.next()
+        try:
+            bsd_gen.next()
+        except:
+            next(bsd_gen)
         if data is None:
             return bsd_gen
         else:
@@ -957,7 +969,10 @@ class Bins(object):
                     ma_variances.mask[curr_bin] = False
 
         ba_gen = bin_average_gen(variances)
-        ba_gen.next()
+        try:
+            ba_gen.next()
+        except:
+            next(ba_gen)
         if data is None:
             return ba_gen
         else:
@@ -1129,7 +1144,10 @@ class Bins(object):
                         binElements[curr_bin], p)
 
         bp_gen = bin_percentile_gen(perc)
-        bp_gen.next()
+        try:
+            bp_gen.next()
+        except:
+            next(bp_gen)
         if data is None:
             return bp_gen
         else:
@@ -1174,7 +1192,10 @@ class Bins(object):
                 elem = (yield bp_gen.send(elem)[0])
 
         bm_gen = bin_median_gen()
-        bm_gen.next()
+        try:
+            bm_gen.next()
+        except:
+            next(bm_gen)
         if data is None:
             return bm_gen
         else:
@@ -1281,7 +1302,7 @@ class Bins2D(object):
                 raise BinLimitError("Y-coordinate %g is not in the interval [%g"
                                     ", %g]." % (elem[1], self.bin_limits[1].minValue,
                                                 self.bin_limits[1].maxValue))
-        except TypeError, IndexError:
+        except TypeError:
             # TypeError occurs when data is a list and elem is
             # integer or a float. Rather surprisingly, numpy
             # raises an IndexError in the same situation; try for
