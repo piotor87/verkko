@@ -16,7 +16,7 @@ class __field_converter(object):
 
         # Column number must match type number.
         if len(cols) != len(types):
-            raise Exception, "Number of types does not match the number of columns."
+            raise Exception("Number of types does not match the number of columns.")
 
         self.types = types
         self.cols = cols
